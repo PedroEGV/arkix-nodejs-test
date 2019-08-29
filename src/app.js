@@ -3,6 +3,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
+const mongo = require('./mongo');
+const users = require('./users');
 const SERVER_PORT = process.env.SERVER_PORT || 8000;
 const app = express();
 
@@ -10,6 +12,15 @@ const app = express();
 app.use(methodOverride());
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '50mb', parameterLimit: 20000, extended: true }));
+
+mongo(app);
+
+// API
+app.get('/', (req, res) => {
+  return res.send('Server is running.');
+});
+
+users(app);
 
 var server = app.listen(SERVER_PORT, () => console.log('Listening port', SERVER_PORT));
 
