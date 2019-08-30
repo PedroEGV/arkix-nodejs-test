@@ -11,8 +11,8 @@ const schema = new Schema({
   password: { type: String, required: true }
 }, { timestamps: true });
 
-schema.methods.checkPass = function (password) {
-  return this.password === password;
+schema.methods.checkPassword = function (password) {
+  return this.password.length === password.length && this.password.includes(password);
 };
 
 module.exports = mongoose.model("User", schema);

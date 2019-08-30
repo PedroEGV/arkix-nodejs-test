@@ -33,10 +33,15 @@ async function findOne(id) {
   return User.findOne({ id });
 }
 
+async function findByEmail(email) {
+  return User.findOne({ email });
+}
+
 module.exports = {
   save,
   edit,
   remove,
   find,
-  findOne
+  findOne,
+  findByEmail
 };
