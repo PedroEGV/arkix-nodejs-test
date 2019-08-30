@@ -1,20 +1,25 @@
 'use strict';
 
 const repository = require("./repository");
+const mapObject = require('../utils/map-object');
+const keys = ['id', 'name', 'email', 'createdAt', 'updatedAt'];
 
 async function list(req, res) {
-  const entities = await repository.find();
+  let entities = await repository.find();
+  entities = mapObject(entities, keys);
   return res.json(entities);
 }
 
 async function one(req, res) {
-  const entity = await repository.findOne(req.params.id);
+  let entity = await repository.findOne(req.params.id);
+  entity = mapObject(entity, keys);
   return res.json(entity);
 }
 
 async function create(req, res) {
   try {
-    const entity = await repository.save(req.body);
+    let entity = await repository.save(req.body);
+    entity = mapObject(entity, keys);
     return res.json(entity);
   } catch (error) {
     if (error.code === 11000) {
@@ -28,7 +33,8 @@ async function create(req, res) {
 
 async function update(req, res) {
   try {
-    const entity = await repository.edit(req.params.id, req.body);
+    let entity = await repository.edit(req.params.id, req.body);
+    entity = mapObject(entity, keys);
     return res.json(entity);
   } catch (error) {
     if (error.code === 11000) {
@@ -41,7 +47,8 @@ async function update(req, res) {
 }
 
 async function remove(req, res) {
-  const entity = await repository.remove(req.params.id);
+  let entity = await repository.remove(req.params.id);
+  entity = mapObject(entity, keys);
   return res.json(entity);
 }
 

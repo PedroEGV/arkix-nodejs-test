@@ -2,6 +2,8 @@
 
 const repository = require("./repository");
 const jwt = require('../utils/jwt');
+const mapObject = require('../utils/map-object');
+const keys = ['id', 'title', 'content', 'author', 'createdAt', 'updatedAt'];
 
 async function list(req, res) {
   const token = req.headers['authorization'];
@@ -25,12 +27,14 @@ async function list(req, res) {
   }
 
   entities = entities.splice(page * perPage, perPage);
+  entities = mapObject(entities, keys);
 
   return res.json(entities);
 }
 
 async function one(req, res) {
-  const entity = await repository.findOne(req.params.id);
+  let entity = await repository.findOne(req.params.id);
+  entity = mapObject(entity, keys);
   return res.json(entity);
 }
 
@@ -38,21 +42,24 @@ async function create(req, res) {
   const body = req.body;
   const token = req.headers['authorization'];
   body.author = jwt.decode(token).userId;
-  const entity = await repository.save(body);
+  let entity = await repository.save(body);
+  entity = mapObject(entity, keys);
   return res.json(entity);
 }
 
 async function update(req, res) {
   const body = req.body;
   body.author = null;
-  const entity = await repository.edit(req.params.id, req.body);
+  let entity = await repository.edit(req.params.id, req.body);
+  entity = mapObject(entity, keys);
   return res.json(entity);
 }
 
 async function remove(req, res) {
   const token = req.headers['authorization'];
-  const entity = await repository.remove(req.params.id);
+  let entity = await repository.remove(req.params.id);
   if (entity.author !== jwt.decode(token).userId) return res.status(401).send('Unauthorized.');
+  entity = mapObject(entity, keys);
   return res.json(entity);
 }
 
