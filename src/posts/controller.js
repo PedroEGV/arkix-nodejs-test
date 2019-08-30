@@ -1,6 +1,7 @@
 'use strict';
 
 const repository = require("./repository");
+const jwt = require('../utils/jwt');
 
 async function list(req, res) {
   const entities = await repository.find();
@@ -13,11 +14,16 @@ async function one(req, res) {
 }
 
 async function create(req, res) {
-  const entity = await repository.save(req.body);
+  const body = req.body;
+  const token = req.headers['authorization'];
+  body.author = jwt.decode(token).userId;
+  const entity = await repository.save(body);
   return res.json(entity);
 }
 
 async function update(req, res) {
+  const body = req.body;
+  body.author = null;
   const entity = await repository.edit(req.params.id, req.body);
   return res.json(entity);
 }
