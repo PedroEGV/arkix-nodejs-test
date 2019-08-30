@@ -5,7 +5,23 @@ const jwt = require('../utils/jwt');
 
 async function list(req, res) {
   const token = req.headers['authorization'];
-  const entities = await repository.find({ author: jwt.decode(token).userId });
+  let search = req.query.search;
+  let entities = await repository.find({ author: jwt.decode(token).userId });
+
+  if (search && search !== '') {
+    search = search
+      .split('-').join(' ')
+      .split('_').join(' ')
+      .split('.').join(' ')
+      .split(',').join(' ')
+      .toLowerCase().split(' ')
+      .filter(s => s !== '');
+    entities = entities.filter(entity => {
+      return search.some(s => entity.title.toLowerCase().includes(s)
+        || entity.content.toLowerCase().includes(s));
+    });
+  }
+
   return res.json(entities);
 }
 
