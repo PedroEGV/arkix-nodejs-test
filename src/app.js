@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const mongo = require('./mongo');
 const users = require('./users');
+const posts = require('./posts');
 const SERVER_PORT = process.env.SERVER_PORT || 8000;
 const app = express();
 
@@ -21,6 +22,7 @@ app.get('/', (req, res) => {
 });
 
 users(app);
+posts(app);
 
 var server = app.listen(SERVER_PORT, () => console.log('Listening port', SERVER_PORT));
 
