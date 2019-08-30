@@ -4,7 +4,8 @@ const repository = require("./repository");
 const jwt = require('../utils/jwt');
 
 async function list(req, res) {
-  const entities = await repository.find();
+  const token = req.headers['authorization'];
+  const entities = await repository.find({ author: jwt.decode(token).userId });
   return res.json(entities);
 }
 
@@ -29,7 +30,9 @@ async function update(req, res) {
 }
 
 async function remove(req, res) {
+  const token = req.headers['authorization'];
   const entity = await repository.remove(req.params.id);
+  if (entity.author !== jwt.decode(token).userId) return res.status(401).send('Unauthorized.');
   return res.json(entity);
 }
 

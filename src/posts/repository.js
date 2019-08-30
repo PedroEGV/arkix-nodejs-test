@@ -26,8 +26,9 @@ async function remove(id) {
   return entity.remove();
 }
 
-async function find() {
-  return Post.find();
+async function find(filter) {
+  if (!filter) return Post.find();
+  else return Post.find(filter);
 }
 
 async function findOne(id) {
