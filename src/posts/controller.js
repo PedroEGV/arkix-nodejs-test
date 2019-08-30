@@ -5,6 +5,8 @@ const jwt = require('../utils/jwt');
 
 async function list(req, res) {
   const token = req.headers['authorization'];
+  const page = req.query.page || 0;
+  const perPage = req.query.perPage || 10;
   let search = req.query.search;
   let entities = await repository.find({ author: jwt.decode(token).userId });
 
@@ -21,6 +23,8 @@ async function list(req, res) {
         || entity.content.toLowerCase().includes(s));
     });
   }
+
+  entities = entities.splice(page * perPage, perPage);
 
   return res.json(entities);
 }
