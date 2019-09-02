@@ -1,7 +1,5 @@
 'use strict';
 
-'use strict';
-
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET || 'catch_me_if_you_can';
 

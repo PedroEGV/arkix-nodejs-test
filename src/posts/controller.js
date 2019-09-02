@@ -3,6 +3,7 @@
 const repository = require("./repository");
 const jwt = require('../utils/jwt');
 const mapObject = require('../utils/map-object');
+const s3FileUpload = require('../utils/s3-upload');
 const keys = ['id', 'title', 'content', 'author', 'createdAt', 'updatedAt'];
 
 async function list(req, res) {
@@ -63,10 +64,27 @@ async function remove(req, res) {
   return res.json(entity);
 }
 
+async function uploadImage(req, res) {
+  const files = req.files;
+  const id = req.params.id;
+
+  if (!files || files.length === 0) return res.status(400).json({ code: 'MISSING_FILE' });
+
+  try {
+    const fileName = files[0].filename;
+    const imageUrl = await s3FileUpload(fileName);
+    await = repository.edit(id, { imageUrl });
+    return res.json({ imageUrl });
+  } catch (error) {
+    return res.status(500).json({ code: 'ERROR_UPLOADING' });
+  }
+}
+
 module.exports = {
   list,
   one,
   create,
   update,
-  remove
+  remove,
+  uploadImage
 };
