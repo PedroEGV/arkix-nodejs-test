@@ -73,7 +73,7 @@ async function uploadImage(req, res) {
   try {
     const fileName = files[0].filename;
     const imageUrl = await s3FileUpload(fileName);
-    await = repository.edit(id, { imageUrl });
+    await repository.edit(id, { imageUrl });
     return res.json({ imageUrl });
   } catch (error) {
     return res.status(500).json({ code: 'ERROR_UPLOADING' });
