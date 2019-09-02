@@ -9,7 +9,7 @@ const mongo = require('./mongo');
 const users = require('./users');
 const posts = require('./posts');
 const auth = require('./auth');
-const SERVER_PORT = process.env.SERVER_PORT || 8000;
+const PORT = process.env.PORT || 8000;
 const app = express();
 
 // Middleware
@@ -28,6 +28,6 @@ users(app);
 posts(app);
 auth(app);
 
-var server = app.listen(SERVER_PORT, () => console.log('Listening port', SERVER_PORT));
+var server = app.listen(PORT, () => console.log('Listening port', PORT));
 
 module.exports = server;
